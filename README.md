@@ -13,4 +13,5 @@ I would also like to test out some ideas in optimization, perhaps having machine
 
 ## Sources
 [Syntax and Semantics of Quantitative Type Theory](http://www.t-news.cn/Floc2018/FLoC2018-pages/proceedings_paper_665.pdf)
+
 [Idris 2: Quantitative Type Theory in Practice](https://arxiv.org/pdf/2104.00480.pdf)
