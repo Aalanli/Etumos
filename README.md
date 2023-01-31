@@ -10,3 +10,7 @@ I would like to make a **statically typed**, *(purely?)* **functional** language
 Perhaps the closest language to my vision of this one is [Idris 2](https://github.com/idris-lang/Idris2), from which I will probably take a few ideas, such as [QTT](http://www.t-news.cn/Floc2018/FLoC2018-pages/proceedings_paper_665.pdf). In particular, linear dependent types can be used to handle mutable state, without monads. While the blurring of lines between compile time and run time can enable far more flexibility and expressibility in the language. Perhaps enforcing invariants such as commutativity, associativity, etc.
 
 I would also like to test out some ideas in optimization, perhaps having machine learned heuristic functions, but that is in the long term.
+
+## Sources
+[Syntax and Semantics of Quantitative Type Theory](http://www.t-news.cn/Floc2018/FLoC2018-pages/proceedings_paper_665.pdf)
+[Idris 2: Quantitative Type Theory in Practice](https://arxiv.org/pdf/2104.00480.pdf)
