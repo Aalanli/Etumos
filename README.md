@@ -1,5 +1,89 @@
+---
+word: "test"
+---
 # Etumos
-A programming language combining the best of Julia and Rust
+Explorations in programming language design
+
+**Goals**: To make a language that is more expressive, more scalable/composable, as safe as, as performant as its current modern day counterparts. (Rust, Julia, Haskell)
+
+**Definitions** *ad hoc*
+Language A is more expressive than language B when on average, it requires less and more readable lines of code to capture a given feature/concept. 
+
+Language A is more readable than language B when on average, it requires less time to understand a concept implemented in the language; requiring less time to be able to predict the outputs of a program.
+
+Language A is safer than language B when on average, there are fewer things to remember to write a program which has the intended behavior.
+
+## Observations
+### Rust
+I enjoy Rust, far more than C++ anyhow. Probably the most enjoyable aspects of it is the type system. Which ensures correctness by construction and solid memory semantics. Type inferance also improves productivity and scalability. However, there are several aspects which I would change xor wish Rust had. 
+
+1. Trait bounds. Some libraries requires heavy trait bounds to interface with the system. At best, this is very verbose, and not very extensible. At worst, the traits defined are brittle and leaky. Writing generic functions with (many) trait bounds is also very painful. 
+	- Just in general, I am dissatisfied with Rust's generics. The lack of const generics, and brittleness of traits makes things uncomfortable some of the time.
+```Rust
+// wish this was possible
+trait A {
+	fn foo(&self) -> impl Clone;
+}
+
+trait B {
+	fn bar(&self, other: &impl A) -> impl B;
+}
+
+// I am aware this is possible, but I rarely do this, as large trait bounds,
+// with many generic parameters can get truly monsterous.
+trait C: A, B {}
+impl<T: A, B> C for T {}
+```
+2. Macros. I wish macros could gather the AST.
+
+```Rust
+fn foo(a: i32, b: i32) -> {
+	if b == 0 { 0 }
+	else if (a % b == 0) { b }
+	else { foo(b, a % b) }
+}
+
+fn main() {
+	dump_ast!(foo);
+}
+
+// outputs the body of foo
+```
+
+3. Lifetimes. In some cases, lifetimes are too restricting, and unsafe is needed.
+
+```Rust
+struct Foo<'a>(Vec<&'a mut f32>);
+
+fn main() {
+	let mut a = Foo(Vec::new());
+	let mut b = 1.0;
+	a.0.push(&mut b);
+	// some computations later
+	a.0.clear();
+	b += 1.0; // error, the type of foo still has the lifetime of b
+}
+```
+
+```Rust
+// not possible, which makes sense, but is frustating
+fn wtf<'a, 'b, 'c, 'd, 'e>(v: &'a mut &'b mut &'c mut &'d mut &'e mut [f32]) {
+	let h: &mut [f32] = ****v;
+}
+```
+
+4. Mental overhead. I don't think rust is necessary for most things; I find myself agonizing over the use of Rc/Arc when it is default in some programming languages
+
+
+
+### Julia
+Julia is a nice language. I like its type system, tools and consistency. However, I don't think unrestricted dynamic dispatch is beneficial long term. Informal interfaces are error prone. GC and runtime does not make it general-purpose enough. 
+
+When I write something in Rust or Haskell, almost always, it runs the first time. That cannot be said for Julia.
+
+Addtionally, like Nim, I wish I could turn off the gc. I wish there were mutable structs on the stack, or at least let mutable structs be flattened in an array.
+
+
 
 ## Motivations
 Both the Julia and Rust programming languages are great, truly modern in its usability when compared to some of its predecessors (IMO). The Julia programming language is great due to its flexibility, all the benefits of dynamic polymorphism is realized due to its function dispatch, and the performance is great too. But because of this, the benefits of functional types and type inference at instantiation time is moot, so loads of run time errors. On the other hand, Rust, because of HM, has great static type properties, I especially like the functional types. But the lack of flexibility in its type system makes polymorphism verbose and difficult; I would not like to use macros to handle this (maybe if macros are more structured, rather than operating on strings?). An example of this is array types as defined by the ndarray crate. Dependent types in array dimensions are especially crippling (annoying to extend and use imo). 
